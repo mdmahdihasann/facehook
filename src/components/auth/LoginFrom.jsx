@@ -1,11 +1,11 @@
 import { useForm } from "react-hook-form";
 import Field from "../common/Field";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../contexts";
 import { useAuth } from "../../hooks/useAuth";
+import axios from "axios";
 
 const LoginFrom = () => {
-  const {setAuth} = useAuth();
+  const { setAuth } = useAuth();
   const Navigate = useNavigate();
 
   const {
@@ -14,10 +14,25 @@ const LoginFrom = () => {
     formState: { errors },
   } = useForm();
 
-  const submitFrom = (fromData) => {
-    const user = {...fromData}
-    setAuth({user});
-    Navigate("/");
+  const submitFrom = async (fromData) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/auth/login`,
+        fromData
+      );
+
+      if (response.status == 200) {
+        const { user, token } = response.data;
+        if (token) {
+          const authToken = token.token;
+          const refreshToken = token.refreshToken;
+          setAuth({ user, authToken, refreshToken });
+          Navigate("/");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
