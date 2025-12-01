@@ -1,47 +1,61 @@
+import React from "react";
 import { useForm } from "react-hook-form";
 import Field from "../common/Field";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const LoginFrom = () => {
-  const { setAuth } = useAuth();
-  const Navigate = useNavigate();
-
+const RegisterFrom = () => {
+    const Navigate = useNavigate();
   const {
-    register,
     handleSubmit,
+    register,
     formState: { errors },
   } = useForm();
 
   const submitFrom = async (fromData) => {
+    console.log(fromData);
+    
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_BASE_URL}/auth/login`,
+      let response = await axios.post(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/auth/register`,
         fromData
-      );
-
-      if (response.status == 200) {
-        const { user, token } = response.data;
-        if (token) {
-          const authToken = token.token;
-          const refreshToken = token.refreshToken;
-          setAuth({ user, authToken, refreshToken });
-          {authToken && Navigate("/")}
-          
-        }
+      );      
+      if(response.status === 201){
+        Navigate('/login')
       }
     } catch (error) {
       console.log(error);
     }
   };
-
   return (
     <div>
       <form
         className="border-b border-[#3F3F3F] "
         onSubmit={handleSubmit(submitFrom)}
       >
+        <Field label="First Name" error={errors.firstName}>
+          <input
+            {...register("firstName", { required: "firstname Id is Required" })}
+            type="firstName"
+            name="firstName"
+            id="firstName"
+            className={`auth-input ${
+              errors.firstName ? "border-red-500" : "border-gray-200"
+            }`}
+          />
+        </Field>
+        <Field label="Last Name" error={errors.lastName}>
+          <input
+            {...register("lastName", { required: "lastName Id is Required" })}
+            type="lastName"
+            name="lastName"
+            id="lastName"
+            className={`auth-input ${
+              errors.lastName ? "border-red-500" : "border-gray-200"
+            }`}
+          />
+        </Field>
+
         <Field label="Email" error={errors.email}>
           <input
             {...register("email", { required: "Email Id is Required" })}
@@ -72,8 +86,8 @@ const LoginFrom = () => {
         </Field>
 
         <Field>
-          <button className="auth-input bg-lwsGreen font-bold text-deepDark transition-all hover:opacity-90">
-            Login
+          <button type="submit" className="auth-input bg-lwsGreen font-bold text-deepDark transition-all hover:opacity-90">
+            Register
           </button>
         </Field>
       </form>
@@ -81,4 +95,4 @@ const LoginFrom = () => {
   );
 };
 
-export default LoginFrom;
+export default RegisterFrom;

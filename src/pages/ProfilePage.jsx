@@ -1,37 +1,57 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useAxios } from "../hooks/useAxios";
+import { actions } from "../actions";
+import ProfileImage from "../components/profile/ProfileImage";
+import ProfileInfo from "../components/profile/ProfileInfo";
+import Bio from "../components/profile/Bio";
+import { useProfile } from "../hooks/useProfile";
+import PostsCard from "../components/posts/PostsCard";
+import MyPosts from "../components/profile/MyPosts";
 
 const ProfilePage = () => {
-  const [user, setUser] = useState(null);
-  const [posts, setPosts] = useState([]);
+  const { state, dispatch } = useProfile();
   const { api } = useAxios();
   const { auth } = useAuth();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
+    dispatch({ type: actions.profile.DATA_FETCHING });
     const fetchProfile = async () => {
-      setLoading(true);
       try {
         const response = await api.get(
           `${import.meta.env.VITE_SERVER_BASE_URL}/profile/${auth?.user?.id}`
         );
-        setUser(response.data?.user);
-        setPosts(response.data?.posts);
+        if (response.status === 200) {
+          dispatch({
+            type: actions.profile.DATA_FETCHED,
+            data: response.data,
+          });
+        }
       } catch (error) {
-        console.log(error);
-        setError(error);
-      } finally {
-        setLoading(false);
+        console.error(error);
+        dispatch({
+          type: actions.profile.DATA_FETCH_ERROR,
+          error: error.message,
+        });
       }
     };
+
     fetchProfile();
   }, []);
-  if (loading) return <h2>Featch Profile data...</h2>;
+
+  if (state?.loading) return <h2>Fetching Profile data...</h2>;
+
   return (
     <>
-      <h3>{user?.firstName}</h3>
+      <div className="flex flex-col items-center py-8 text-center">
+        <ProfileImage />
+        <ProfileInfo />
+        <Bio />
+      </div>
+      <div>
+        <h4 className="mt-6 text-xl lg:mt-8 lg:text-2xl ">Your Posts</h4>
+        <MyPosts/>
+      </div>
     </>
   );
 };

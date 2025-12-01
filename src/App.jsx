@@ -1,4 +1,4 @@
-import { Route, Router, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -16,7 +16,6 @@ function App() {
         </Route>
 
         <Route element={<LoginPage />} path="/login" />
-
         <Route element={<RegisterPage />} path="/register" />
         <Route element={<NotFoundPage />} path="*" />
       </Routes>

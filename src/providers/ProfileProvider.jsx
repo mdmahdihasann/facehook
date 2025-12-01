@@ -1,14 +1,15 @@
-import React, { useReducer } from 'react'
-import { ProfileContext } from '../contexts'
-import { ProfileReducers, initialState } from '../reducers/profileReducers'
+import React, { useReducer } from "react";
+import { ProfileContext } from "../contexts";
+import { ProfileReducers, initialState } from "../reducers/ProfileReducers";
 
 const ProfileProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(ProfileReducers, initialState)
+  const [state, dispatch] = useReducer(ProfileReducers, initialState);
+
   return (
     <ProfileContext.Provider value={{ state, dispatch }}>
-        {children}
+      {children}
     </ProfileContext.Provider>
-  )
-}
+  );
+};
 
-export default ProfileProvider
+export default ProfileProvider;
