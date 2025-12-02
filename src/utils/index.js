@@ -1,30 +1,26 @@
-export const getDateDiffrenceFromNew = (formData) => {
-  let diffrence = new Date().getTime() - new Date(formData).getTime();
+export const getDateDiffrenceFromNew = (date) => {
+  const now = new Date();
+  const then = new Date(date);
 
-  diffrence = diffrence / 1000;
-  let hourDiffrence = Math.floor(diffrence / 3600);
-  diffrence -= hourDiffrence * 3600;
-  let minuteDiffrence = Math.floor(diffrence / 60);
-  diffrence -= minuteDiffrence * 60;
-  let dayDiffrence = Math.floor(diffrence / 24);
-  diffrence -= dayDiffrence* 24
+  const diffInSeconds = Math.floor((now - then) / 1000);
 
-  let message;
-  if(dayDiffrence > 0){
-    message = `${dayDiffrence} day`
-  }
-  if (hourDiffrence > 0) {
-    message = message ? `${message} ${hourDiffrence} hour` : `${hourDiffrence} hour`;
-  }
-  if (minuteDiffrence > 0) {
-    message = message
-      ? `${message} ${minuteDiffrence} minutes`
-      : `${minuteDiffrence} minutes`;
-  }
-  if (diffrence) {
-    message = message
-      ? `${message} ${Math.floor(diffrence)} seconds`
-      : `${Math.floor(diffrence)} seconds`;
-  }
-  return message;
+  if (diffInSeconds < 60) return "Just now";
+
+  const minutes = Math.floor(diffInSeconds / 60);
+  if (minutes < 60) return `${minutes} minute${minutes > 1 ? "s" : ""} `;
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} `;
+
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days} day${days > 1 ? "s" : ""} `;
+
+  const weeks = Math.floor(days / 7);
+  if (weeks < 4) return `${weeks} week${weeks > 1 ? "s" : ""} `;
+
+  const months = Math.floor(days / 30);
+  if (months < 12) return `${months} month${months > 1 ? "s" : ""} `;
+
+  const years = Math.floor(days / 365);
+  return `${years} year${years > 1 ? "s" : ""} `;
 };

@@ -5,13 +5,36 @@ import DeleteIcon from "../../assets/icons/delete.svg";
 import { getDateDiffrenceFromNew } from "../../utils";
 import { useAvater } from "../../hooks/useAvatar";
 import { useState } from "react";
+import { useAuth } from "../../hooks/useAuth";
+import { useAxios } from "../../hooks/useAxios";
+import { UsePost } from "../../hooks/usePost";
+import { actions } from "../../actions";
 
 const PostsHeader = ({ post }) => {
   const { avatarUrl } = useAvater(post);
+  const { auth } = useAuth();
+  const { api } = useAxios();
+  const { dispatch } = UsePost();
   const [showAction, setShowAction] = useState(false);
   function handleAction() {
     setShowAction(!showAction);
   }
+
+  const users = auth.user.id === post.author.id;
+
+  const handleDeletePost = async () => {
+    try {
+      const response = await api.delete(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/posts/${post.id}`
+      );
+      if (response.data === 200) {
+        dispatch({ type: actions.posts.DATA_DELETE, data: response.data });
+      }
+    } catch (error) {
+      dispatch({ type: actions.posts.DATA_FETCH_ERROR, error: error.message });
+    }
+  };
+
   return (
     <header className="flex items-center justify-between gap-4">
       {/* <!-- author info --> */}
@@ -35,9 +58,11 @@ const PostsHeader = ({ post }) => {
 
       {/* <!-- action dot --> */}
       <div className="relative">
-        <button onClick={handleAction}>
-          <img src={DotIcon} alt="3dots of Action" />
-        </button>
+        {users && (
+          <button onClick={handleAction}>
+            <img src={DotIcon} alt="3dots of Action" />
+          </button>
+        )}
 
         {showAction && (
           <div className="action-modal-container">
@@ -45,7 +70,10 @@ const PostsHeader = ({ post }) => {
               <img src={EditIcon} alt="Edit" />
               Edit
             </button>
-            <button className="action-menu-item hover:text-red-500">
+            <button
+              className="action-menu-item hover:text-red-500"
+              onClick={handleDeletePost}
+            >
               <img src={DeleteIcon} alt="Delete" />
               Delete
             </button>

@@ -3,6 +3,7 @@ import { useProfile } from "../../hooks/useProfile";
 import { useAxios } from "../../hooks/useAxios";
 import edit from "../../assets/icons/edit.svg";
 import { actions } from "../../actions";
+import EmptyImage from "../../assets/images/avatars/Empty.png"
 
 const ProfileImage = () => {
   const { state, dispatch } = useProfile();
@@ -19,7 +20,7 @@ const ProfileImage = () => {
       const formData = new FormData();
       for (const file of fileInputRef.current.files) {
         formData.append("avatar", file);
-      }
+      }      
       const response = await api.post(
         `${import.meta.env.VITE_SERVER_BASE_URL}/profile/${
           state.user?.id
@@ -40,7 +41,7 @@ const ProfileImage = () => {
     <div className="relative mb-8 max-h-[180px] max-w-[180px] rounded-full lg:mb-11 lg:max-h-[218px] lg:max-w-[218px]">
       <img
         className="max-w-[212px] max-h-[200px] rounded-full"
-        src={`${import.meta.env.VITE_SERVER_BASE_URL}/${state.user?.avatar}`}
+        src={state.user?.avatar ? `${import.meta.env.VITE_SERVER_BASE_URL}/${state.user?.avatar}` : EmptyImage}
         alt={state.user?.name}
       />
 

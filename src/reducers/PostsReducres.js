@@ -20,6 +20,18 @@ const PostsReducres = (state, action) => {
         loading: false,
         posts: action.data,
       };
+    case actions.posts.DATA_CREATE:
+      return {
+        ...state,
+        loading: false,
+        posts: [...state.posts, action.data],
+      };
+    case actions.posts.DATA_DELETE:
+      return {
+        ...state,
+        loading: false,
+        posts: state.posts.filter((post)=> post.id !== action.data),
+      };
     case actions.posts.DATA_FETCH_ERROR:
       return {
         ...state,

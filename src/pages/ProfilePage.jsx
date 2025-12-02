@@ -6,7 +6,6 @@ import ProfileImage from "../components/profile/ProfileImage";
 import ProfileInfo from "../components/profile/ProfileInfo";
 import Bio from "../components/profile/Bio";
 import { useProfile } from "../hooks/useProfile";
-import PostsCard from "../components/posts/PostsCard";
 import MyPosts from "../components/profile/MyPosts";
 
 const ProfilePage = () => {

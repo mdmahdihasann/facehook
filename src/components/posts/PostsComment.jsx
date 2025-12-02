@@ -2,13 +2,18 @@ import React, { useState } from "react";
 import PostsCommentList from "./PostsCommentList";
 import { useAuth } from "../../hooks/useAuth";
 import { useAxios } from "../../hooks/useAxios";
+import { useProfile } from "../../hooks/useProfile";
+import EmptyImage from "../../assets/images/avatars/Empty.png"
 
 const PostsComment = ({ post }) => {
   const { auth } = useAuth();
+  const {state} = useProfile();
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState(post?.comments);
   const [showComments, setShowComments] = useState(false);
   const { api } = useAxios();
+
+  const authUser = auth?.user.id ?? state?.author?.id
 
   const addComment = async (e) => {
     const keyCode = e.keyCode;
@@ -36,7 +41,7 @@ const PostsComment = ({ post }) => {
       <div className="flex-center mb-3 gap-2 lg:gap-4">
         <img
           className="max-w-7 max-h-7 rounded-full lg:max-h-[34px] lg:max-w-[34px]"
-          src={`${import.meta.env.VITE_SERVER_BASE_URL}/${auth?.user?.avatar}`}
+          src={auth?.user?.avatar ? `${import.meta.env.VITE_SERVER_BASE_URL}/${authUser?.user?.avatar}`: EmptyImage}
           alt="avatar"
         />
 

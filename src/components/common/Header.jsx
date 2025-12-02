@@ -5,6 +5,7 @@ import notification from "../../assets/icons/notification.svg";
 import Logout from "../auth/Logout";
 import { useAuth } from "../../hooks/useAuth";
 import { useProfile } from "../../hooks/useProfile";
+import EmptyImage from "../../assets/images/avatars/Empty.png"
 
 const Header = () => {
   const {auth} = useAuth();
@@ -35,8 +36,8 @@ const Header = () => {
               <Link to="/em" className="flex-center !ml-8 gap-3">
                 <span className="text-lg font-medium lg:text-xl">{user?.firstName} {user?.lastName}</span>
                 <img
-                  className="max-h-[32px] max-w-[60px] lg:max-h-[44px] lg:max-w-[44px] rounded-full"
-                  src={`${import.meta.env.VITE_SERVER_BASE_URL}/${user?.avatar}`}
+                  className="max-h-[32px] max-w-[60px] lg:max-h-[40px] lg:max-w-[40px] rounded-full"
+                  src={user?.avatar ? `${import.meta.env.VITE_SERVER_BASE_URL}/${user.avatar}` : EmptyImage}
                   alt=""
                 />
               </Link>
